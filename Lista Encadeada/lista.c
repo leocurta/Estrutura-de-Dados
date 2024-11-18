@@ -1,13 +1,12 @@
-/*Leonardo Costa Curta*/
+/* Leonardo Costa Curta */
 #include <stdio.h>
 #include <stdlib.h>
 #include "lista.h"
 
 /* Cria uma nova lista */
 noLista *listaCriaNova() {
-    noLista *novaLista = (noLista *) malloc(sizeof(noLista));
+    noLista *novaLista = (noLista *)malloc(sizeof(noLista));
     if (novaLista != NULL) {
-        novaLista->info = 0;
         novaLista->prox = NULL;
     }
     return novaLista;
@@ -21,87 +20,91 @@ int listaEhVazia(noLista *L) {
 /* Apaga todos os elementos da lista */
 void listaApaga(noLista **L) {
     noLista *aux;
+
     while (!listaEhVazia(*L)) {
         aux = *L;
         *L = (*L)->prox;
         free(aux);
     }
+    return;
 }
 
 /* Insere um elemento na primeira posicao */
 int listaInsereInicio(noLista **L, int info) {
-    noLista *novoNo;
-    novoNo= (noLista *) malloc(sizeof(noLista));
-    if (novoNo == NULL) {
+    noLista *novo;
+
+    novo = (noLista *)malloc(sizeof(noLista));
+    if (novo != NULL){
+        novo -> info = info;
+        novo -> prox = *L;
+        *L = novo;
+        return 1;
+    } else {
         return 0;
     }
-    novoNo->info = info;
-    novoNo->prox = *L;
-    *L = novoNo;
-
-    return 1; 
 }
 
 /* Insere um elemento na ultima posicao */
 int listaInsereFim(noLista **L, int info) {
-    noLista *novoNo, *aux;
+    noLista *novo, *aux;
+
     if (listaEhVazia(*L)) {
         return listaInsereInicio(L, info);
     } else {
-        novoNo= (noLista *) malloc(sizeof(noLista));
-        if (novoNo == NULL) {
+        novo = (noLista *)malloc(sizeof(noLista));
+        if (novo != NULL){
+            novo -> info = info;
+            novo -> prox = NULL;
+            aux = *L;
+            while (aux->prox != NULL) {
+                aux = aux->prox;
+            }
+            aux->prox = novo;
+
+            return 1;
+        } else {
             return 0;
         }
-        novoNo->info = info;
-        novoNo->prox = NULL;
-        
-        aux = *L;
-        while (aux-> prox != NULL){
-            aux = aux->prox;
-        }
-        aux->prox = novoNo;
-        return 1; 
-    }
+    } 
 }
 
 /* Insere um elemento em uma determinada posicao p>0 */
 int listaInserePos(noLista **L, int info, int pos) {
-    noLista *novoNo, *aux;
+    noLista *novo, *aux;
     int atual;
-    if (listaEhVazia(*L) || pos<=1) {
-            return listaInsereInicio(L, info);
-        } else {
-            novoNo= (noLista *) malloc(sizeof(noLista));
-            if (novoNo == NULL) {
-                return 0;
-            }
-            novoNo->info = info;
-            novoNo->prox = NULL;
-            
+
+    if (listaEhVazia(*L) || pos <= 1) {
+        return listaInsereInicio(L, info);
+    } else {
+        novo = (noLista *)malloc(sizeof(noLista));
+        if (novo != NULL){
+            novo -> info = info;
             aux = *L;
             atual = 1;
-            while (aux-> prox != NULL && atual < pos-1){
+            while (aux->prox != NULL && atual < pos - 1) {
                 aux = aux->prox;
                 atual++;
             }
-            novoNo->prox = aux->prox;
-            aux->prox = novoNo;
-            return 1; 
+            novo->prox = aux->prox;
+            aux->prox = novo;
+
+            return 1;
         }
-        return 0;
+    }
+    return 0;
 }
 
 /* Remove o primeiro elemento */
 int listaRemoveInicio(noLista **L, int *info) {
     noLista *aux;
-    if (listaEhVazia(*L)){
+
+    if (listaEhVazia(*L)) {
         return 0;
     } else {
         aux = *L;
         *L = (*L)->prox;
         *info = aux->info;
         free(aux);
-
         return 1;
     }
 }
@@ -110,14 +113,13 @@ int listaRemoveInicio(noLista **L, int *info) {
 int listaRemoveFim(noLista **L, int *info) {
     noLista *aux, *ant;
 
-    if (listaEhVazia(*L)){
+    if (listaEhVazia(*L)) {
         return 0;
     } else {
-        aux = *L;
-        if (ant->prox != NULL){
-            ant = aux;
-            aux = ant->prox;
-            while (aux->prox != NULL){
+        ant = *L;
+        aux = ant->prox;
+        if (aux != NULL) {
+            while (aux->prox != NULL) {
                 ant = aux;
                 aux = aux->prox;
             }
@@ -125,48 +127,46 @@ int listaRemoveFim(noLista **L, int *info) {
         } else {
             *L = NULL;
         }
-        *info = aux->info;
-        free(aux);
-
+        *info = ant->info;
+        free(ant);
         return 1;
     }
 }
 
 /* Remove um elemento em uma posicao p > 0*/
-int listaRemovePosicao(noLista **L,int *info, int pos) {
+int listaRemovePosicao(noLista **L, int *info, int pos) {
     noLista *aux, *ant;
     int atual;
 
-    if (listaEhVazia(*L)){
+    if (listaEhVazia(*L)) {
+        return 0;
+
+    } else if (pos < 1){
         return 0;
 
     } else if (pos == 1) {
-        listaRemoveInicio(L, info);
-
-    } else if(pos <= 1){
         return listaRemoveInicio(L, info);
 
-    }else {
+    } else {
         aux = *L;
-        if (ant->prox != NULL){
+        aux = ant->prox;
+        if (aux != NULL) {
             ant = aux;
-            aux = ant->prox;
+            aux = aux->prox;
             atual = 2;
-            while (aux->prox != NULL && atual < pos){
+            while (aux->prox != NULL && atual < pos) {
                 ant = aux;
                 aux = aux->prox;
                 atual++;
             }
             if (atual == pos){
                 ant->prox = aux->prox;
-                *info = aux->info;
+                *info = ant->info;
                 free(aux);
                 return 1;
             } else {
                 return 0;
             }
-        } else {
-            return 0;
         }
     }
 }
@@ -174,29 +174,38 @@ int listaRemovePosicao(noLista **L,int *info, int pos) {
 /* Procura Elemento na Lista e retorna sua posição > 0 */
 int listaPesquisaElemento(noLista *L, int info) {
     int atual;
-    if (listaEhVazia(L)){
+
+    if (listaEhVazia(L)) {
         return 0;
-     } else {
+    } else {
         atual = 1;
-        while (L != NULL && L->info != info){
+        while (L != NULL && L->info != info) {
             L = L->prox;
             atual++;
         }
-        if(L == NULL)
-            return 0;
-         else 
+        if (L != NULL) {
             return atual;
-     }
+        } else {
+            return 0;
+        }
+    }
 }
 
 /* Inverte os elementos da Lista */
 void listaInverte(noLista **L) {
-    noLista *aux;
+    noLista *aux, *novaLista;
 
-    if (listaEhVazia(L)){
-        return 0;
-     } 
+    novaLista = NULL;
+    while (!listaEhVazia(*L)){
+        aux = *L;
+        *L = (*L)->prox;
+        aux->prox = novaLista;
+        novaLista = aux;
+    }
+    *L = novaLista;
 
     return;
 }
+    
+
 

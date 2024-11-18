@@ -1,12 +1,12 @@
-/*Leonardo Costa Curta*/
+/* Leonardo Costa Curta */
 
+#ifndef LISTA_H
+#define LISTA_H
 
-typedef struct _Lista_ noLista;
-
-struct _Lista_ {
-    int      info;
-    noLista *prox;
-};
+typedef struct _Lista_ {
+    int info;
+    struct _Lista_ *prox;
+} noLista;
 
 /* Cria uma nova lista */
 noLista *listaCriaNova();
@@ -33,7 +33,7 @@ int listaRemoveInicio(noLista **L, int *info);
 int listaRemoveFim(noLista **L, int *info);
 
 /* Remove um elemento em uma posicao p>0 */
-int listaRemovePosicao(noLista **L, int pos);
+int listaRemovePosicao(noLista **L, int *info, int pos);
 
 /* Procura Elemento na Lista e retorna sua posição > 0 */
 int listaPesquisaElemento(noLista *L, int info);
@@ -41,3 +41,4 @@ int listaPesquisaElemento(noLista *L, int info);
 /* Inverte os elementos da Lista */
 void listaInverte(noLista **L);
 
+#endif /* LISTA_H */
