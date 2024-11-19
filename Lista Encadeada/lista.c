@@ -5,11 +5,7 @@
 
 /* Cria uma nova lista */
 noLista *listaCriaNova() {
-    noLista *novaLista = (noLista *)malloc(sizeof(noLista));
-    if (novaLista != NULL) {
-        novaLista->prox = NULL;
-    }
-    return novaLista;
+    return NULL;
 }
 
 /* Verifica se a lista eh vazia */
@@ -116,22 +112,22 @@ int listaRemoveFim(noLista **L, int *info) {
     if (listaEhVazia(*L)) {
         return 0;
     } else {
-        ant = *L;
-        aux = ant->prox;
-        if (aux != NULL) {
-            while (aux->prox != NULL) {
-                ant = aux;
-                aux = aux->prox;
-            }
-            ant->prox = NULL;
-        } else {
-            *L = NULL;
+        aux = *L;
+        ant = NULL;
+        while (aux->prox != NULL) {
+            ant = aux;
+            aux = aux->prox;
         }
-        *info = ant->info;
-        free(ant);
-        return 1;
+        if (ant == NULL) {
+            *L = NULL;
+        } else {
+            ant->prox = NULL;
+        }
+        *info = aux->info;
+        free(aux);
+        return 1;   
     }
-}
+} 
 
 /* Remove um elemento em uma posicao p > 0*/
 int listaRemovePosicao(noLista **L, int *info, int pos) {
@@ -149,27 +145,23 @@ int listaRemovePosicao(noLista **L, int *info, int pos) {
 
     } else {
         aux = *L;
-        aux = ant->prox;
-        if (aux != NULL) {
+        ant = NULL;
+        atual = 1;
+        while (aux != NULL && atual < pos) {
             ant = aux;
             aux = aux->prox;
-            atual = 2;
-            while (aux->prox != NULL && atual < pos) {
-                ant = aux;
-                aux = aux->prox;
-                atual++;
-            }
-            if (atual == pos){
-                ant->prox = aux->prox;
-                *info = ant->info;
-                free(aux);
-                return 1;
-            } else {
-                return 0;
-            }
+            atual++;
         }
+        if (aux == NULL) {
+            return 0; // Posição fora dos limites da lista
+        }
+        ant->prox = aux->prox;
+        *info = aux->info;
+        free(aux);
+        return 1;
     }
 }
+
 
 /* Procura Elemento na Lista e retorna sua posição > 0 */
 int listaPesquisaElemento(noLista *L, int info) {
@@ -206,6 +198,3 @@ void listaInverte(noLista **L) {
 
     return;
 }
-    
-
-
