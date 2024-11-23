@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "listaD.h"
+#include "listaNC.h"
 
 int leInfo(char *s) {
     int v;
@@ -8,12 +8,15 @@ int leInfo(char *s) {
     return v;
 }
 
-void imprimeLista(noListaD *L) {
-    if (!listaEhVazia(L)) {
+void imprimeLista(noListaNC *L) {
+    if (L == NULL) {
+        printf("L: Nao inicializada!\n");
+    } else if (!listaEhVazia(L)) {
+        L = L->prox;
         printf("L: %d", L->info);
         L = L->prox;
-        while (!listaEhVazia(L)) {
-            printf(" <==> %d", L->info);
+        while (L != NULL) {
+            printf(" ==> %d", L->info);
             L = L->prox;
         }
         printf("\n");
@@ -22,7 +25,7 @@ void imprimeLista(noListaD *L) {
 }
 
 int main() {
-    noListaD *Lista;
+    noListaNC *Lista;
     int op, info, p, res;
 
 	Lista = listaCriaNova();
@@ -30,7 +33,7 @@ int main() {
         printf("\nEscolha uma opcao:\n");
         printf("1 - Inserir Inicio\t2 - Inserir Fim\t\t3 - Inserir Posicao\n");
         printf("4 - Remover Inicio\t5 - Remover Fim\t\t6 - Remover Posicao\n");
-        printf("7 - Pesquisar Elem\t8 - Inverter Lista\t9 - Apagar Lista\n");
+        printf("7 - Pesquisar Elem\t8 - Inverter Lista\t9 - Esvaziar Lista\n");
         printf("0 - Sair\n");
         printf("Opcao: ");
         scanf("%d", &op);
@@ -40,12 +43,12 @@ int main() {
             case 3:
                 info = leInfo("Digite o valor a ser inserido: ");
                 if (op == 1) {
-					res = listaInsereInicio(&Lista, info);
+					res = listaInsereInicio(Lista, info);
                 } else if (op == 2) {
-					res = listaInsereFim(&Lista, info);
+					res = listaInsereFim(Lista, info);
                 } else {
                     p = leInfo("Digite a posicao para insercao: ");
-                    res = listaInserePos(&Lista, info, p);
+                    res = listaInserePos(Lista, info, p);
                 }
                 if (res == 0) {
                 	printf("Falha ao inserir valor '%d'.\n", info);
@@ -55,12 +58,12 @@ int main() {
             case 5:
             case 6:
                 if (op == 4) {
-					res = listaRemoveInicio(&Lista, &info);
+					res = listaRemoveInicio(Lista, &info);
                 } else if (op == 5) {
-					res = listaRemoveFim(&Lista, &info);
+					res = listaRemoveFim(Lista, &info);
                 } else {
                     p = leInfo("Digite a posicao para insercao: ");
-                    res = listaRemovePosicao(&Lista, &info, p);
+                    res = listaRemovePosicao(Lista, &info, p);
                 }
                 if (res == 0) {
                 	printf("Falha ao remover item.\n");
@@ -78,10 +81,10 @@ int main() {
 				}
                 break;
             case 8:
-            	listaInverte(&Lista);
+            	listaInverte(Lista);
                 break;
             case 9:
-                listaApaga(&Lista);
+                listaEsvazia(Lista);
                 break;
             case 0:
                 break;

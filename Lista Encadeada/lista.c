@@ -69,25 +69,26 @@ int listaInserePos(noLista **L, int info, int pos) {
     noLista *novo, *aux;
     int atual;
 
-    if (listaEhVazia(*L) || pos <= 1) {
+    if (listaEhVazia(*L) || pos<=1) {
         return listaInsereInicio(L, info);
     } else {
-        novo = (noLista *)malloc(sizeof(noLista));
-        if (novo != NULL){
-            novo -> info = info;
+        novo = (noLista *) malloc(sizeof(noLista));
+        if (novo != NULL) {
+            novo->info = info;
+
             aux = *L;
             atual = 1;
-            while (aux->prox != NULL && atual < pos - 1) {
+            while (aux->prox != NULL && atual < pos-1) {
                 aux = aux->prox;
                 atual++;
             }
             novo->prox = aux->prox;
-            aux->prox = novo;
+            aux->prox  = novo;
 
             return 1;
-        }
+        } else 
+            return 0;
     }
-    return 0;
 }
 
 /* Remove o primeiro elemento */
